@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include <pp-printf.h>
+#include <hw/memlayout.h>
 
 #define mprintf pp_printf
 #define vprintf pp_vprintf
