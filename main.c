@@ -6,9 +6,37 @@
  * Released according to the GNU GPL, version 2 or any later version.
  */
  
-#include "include/sys.h"
+#include <stdio.h>
+#include <inttypes.h>
 
-int main() {
-	mprintf("Hello, world!\n");
-	return 0;
+#include <stdarg.h>
+
+#include <sys.h>
+#include "uart.h"
+#include "shell.h"
+
+static void lm32_initialize()
+{
+
+sdb_find_devices();
+uart_init_sw();
+uart_init_hw();
+
+mprintf("LM32: starting up...\n");
+
+}
+
+int main(void)
+{
+
+lm32_initialize();
+
+shell_init();
+
+mprintf("LM32: shell initialized! \n");
+
+for(;;) {
+shell_interactive();
+}
+
 }

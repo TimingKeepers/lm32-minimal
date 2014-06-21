@@ -23,6 +23,7 @@ LDFLAGS_PLATFORM = -mmultiply-enabled -mbarrel-shift-enabled \
 
 include pp_printf/printf.mk
 include dev/dev.mk
+include shell/shell.mk
 
 CFLAGS = $(CFLAGS_PLATFORM) $(cflags-y) -Wall \
 	-ffunction-sections -fdata-sections -Os \
@@ -47,7 +48,7 @@ $(OUTPUT).elf: $(LDS-y) $(OUTPUT).o
 	$(SIZE) $@
 
 $(OUTPUT).o: $(OBJS)
-	$(LD) --gc-sections -e _start -r $(OBJS) -o $@
+	$(LD) --gc-sections -e _start -r $(OBJS) -T bigobj.lds -o $@
 	
 $(OUTPUT).bin: $(OUTPUT).elf
 	${OBJCOPY} -O binary $^ $@
