@@ -10,6 +10,16 @@
 #include <sys.h>
 #include "hw/memlayout.h"
 
+unsigned char *BASE_MINIC;
+unsigned char *BASE_EP;
+unsigned char *BASE_SOFTPLL;
+unsigned char *BASE_PPS_GEN;
+unsigned char *BASE_SYSCON;
+unsigned char *BASE_UART;
+unsigned char *BASE_ONEWIRE;
+unsigned char *BASE_ETHERBONE_CFG;
+unsigned char *BASE_WRPC_RAM;
+
 #define SDB_INTERCONNET 0x00
 #define SDB_DEVICE      0x01
 #define SDB_BRIDGE      0x02
@@ -99,6 +109,38 @@ static unsigned char *find_device_deep(unsigned int base, unsigned int sdb,
 				 record->device.sdb_component.addr_first.low);
 }
 
+static int get_devices_deep(unsigned int base, unsigned int sdb, struct sdb_component * devs, unsigned int * n_devs, const int MAX_DEVS)
+{
+	sdb_record_t *record = (sdb_record_t *) sdb;
+	int records = record->interconnect.sdb_records;
+	int i;
+	int rcode;
+
+	for (i = 0; i < records; ++i, ++record) {
+		if (record->empty.record_type == SDB_BRIDGE)
+			rcode = get_devices_deep(base + record->bridge.sdb_component.addr_first.low, base + record->bridge.sdb_child.low,devs,n_devs,MAX_DEVS);
+			if (rcode < 0)
+				return -1;
+
+		if (record->empty.record_type != SDB_DEVICE)
+			continue;
+
+		if (*n_devs < MAX_DEVS) {
+			devs[*n_devs] = record->device.sdb_component;
+			devs[*n_devs].product.name[19] = 0;
+			devs[*n_devs].addr_first.low = base + record->device.sdb_component.addr_first.low;
+			devs[*n_devs].addr_last.low = base + record->device.sdb_component.addr_last.low;
+			//mprintf("DEV: %s (0x%x-0x%x)\n",devs[*n_devs].product.name,devs[*n_devs].addr_first.low,devs[*n_devs].addr_last.low);
+			(*n_devs)++;
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	return 0;
+}
+
 static void print_devices_deep(unsigned int base, unsigned int sdb)
 {
 	sdb_record_t *record = (sdb_record_t *) sdb;
@@ -139,7 +181,20 @@ void sdb_print_devices(void)
 	mprintf("---\n");
 }
 
+int sdb_get_devices(struct sdb_component * devs, unsigned int * n_devs, const int MAX_DEVS) {
+	//sdb_print_devices();
+	return get_devices_deep(0,SDB_ADDRESS,devs,n_devs,MAX_DEVS);
+}
+
 void sdb_find_devices(void)
 {
+	BASE_MINIC =         find_device(0xab28633a);
+	BASE_EP =            find_device(0x650c2d4f);
+	BASE_SOFTPLL =       find_device(0x65158dc0);
+	BASE_PPS_GEN =       find_device(0xde0d8ced);
+	BASE_SYSCON =        find_device(0xff07fc47);
 	BASE_UART =          find_device(0xe2d13d04);
+	BASE_ONEWIRE =       find_device(0x779c5443);
+	BASE_ETHERBONE_CFG = find_device(0x68202b22);
+	BASE_WRPC_RAM = find_device(0x66cfeb52);
 }
