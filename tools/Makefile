@@ -1,6 +1,6 @@
 CFLAGS = -Wall -ggdb -I../include
 LDFLAGS = -lutil
-ALL    = genraminit
+ALL    = genraminit genramvhd
 
 AS		= as
 LD		= ld

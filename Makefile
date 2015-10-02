@@ -40,7 +40,9 @@ OBJS = $(obj-y)
 OUTPUT-y   = main_run
 OUTPUT := $(OUTPUT-y)
 
-all: build_tools $(OUTPUT).elf $(OUTPUT).bin $(OUTPUT).ram
+RAMSIZE=131072
+
+all: build_tools $(OUTPUT).elf $(OUTPUT).bin $(OUTPUT).ram $(OUTPUT).vhd
 
 $(OUTPUT).elf: $(LDS-y) $(OUTPUT).o
 	${CC} -o $@ $(OUTPUT).o $(LDFLAGS)
@@ -55,6 +57,9 @@ $(OUTPUT).bin: $(OUTPUT).elf
 
 $(OUTPUT).ram: $(OUTPUT).bin
 	./tools/genraminit $(OUTPUT).bin 0 > $@
+	
+$(OUTPUT).vhd: $(OUTPUT).bin
+	./tools/genramvhd -s $(RAMSIZE) $(OUTPUT).bin > $@
 	
 build_tools:
 	$(MAKE) -C tools

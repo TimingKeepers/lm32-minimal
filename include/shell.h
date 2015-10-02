@@ -19,6 +19,7 @@ char *env_get(const char *var);
 int env_set(const char *var, const char *value);
 void env_init();
 
+void shell_init();
 int shell_exec(const char *buf);
 void shell_interactive();
 

@@ -12,6 +12,8 @@
 #define UART_BAUDRATE 115200
 #define CPU_CLOCK 62500000
 
+#define SFP_PORTS 2
+
 unsigned char *BASE_UART;
 
 #endif
