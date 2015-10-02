@@ -142,4 +142,5 @@ void sdb_print_devices(void)
 void sdb_find_devices(void)
 {
 	BASE_UART =          find_device(0xe2d13d04);
+	BASE_SYSCON =		 find_device(0xff07fc47);
 }

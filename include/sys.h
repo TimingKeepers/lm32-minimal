@@ -15,5 +15,6 @@
 #define SFP_PORTS 2
 
 unsigned char *BASE_UART;
+unsigned char *BASE_SYSCON;
 
 #endif
