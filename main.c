@@ -24,12 +24,14 @@ uint32_t cal_phase_transition[SFP_PORTS] = {2389, 2389};
 
 static void lm32_initialize()
 {
+	
+unsigned char d;
 
 sdb_find_devices();
 uart_init_sw();
 uart_init_hw();
 
-unsigned char d;
+timer_init(1);
 
 /*initialize I2C bus*/
 mi2c_init(FMC_I2C);
@@ -51,7 +53,7 @@ else {
 
 eeprom_present(FMC_I2C, FMC_EEPROM_ADR);
 
-mprintf("LM32: starting up...\n");
+mprintf("Zen: starting up...\n");
 
 }
 
@@ -62,7 +64,7 @@ lm32_initialize();
 
 shell_init();
 
-mprintf("LM32: shell initialized! \n");
+mprintf("Zen: shell initialized! \n");
 
 for(;;) {
 shell_interactive();
