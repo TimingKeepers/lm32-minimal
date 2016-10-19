@@ -33,27 +33,7 @@ uart_init_hw();
 
 timer_init(1);
 
-/*initialize I2C bus*/
-mi2c_init(FMC_I2C);
-
-/* INIT PCA9548A  */
-d = read_i2c_switch(FMC_I2C,I2C_SWITCH_ADDR);
-
-if (d >= 0)
-	mprintf("I2C Switch initial configuration: 0x%x!!\n",(unsigned char) d);
-
-if (configure_i2c_switch(FMC_I2C,I2C_SWITCH_ADDR,I2C_SWITCH_DFL_CFG) != 0)
-	mprintf("Error: I2C Switch could not be configured properly \n");
-else {
-	d = read_i2c_switch(FMC_I2C,I2C_SWITCH_ADDR);
-
-	if (d >= 0)
-		mprintf("I2C Switch configuration updated: 0x%x!!\n",(unsigned char) d);
-}
-
-eeprom_present(FMC_I2C, FMC_EEPROM_ADR);
-
-mprintf("Zen: starting up...\n");
+mprintf("WRS-Z16: starting up...\n");
 
 }
 
@@ -64,7 +44,7 @@ lm32_initialize();
 
 shell_init();
 
-mprintf("Zen: shell initialized! \n");
+mprintf("WRS-Z16: shell initialized! \n");
 
 for(;;) {
 shell_interactive();

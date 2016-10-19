@@ -132,7 +132,7 @@ void shell_interactive()
 	int c;
 	switch (state) {
 	case SH_PROMPT:
-		mprintf("zen-lm32# ");
+		mprintf("wrs-z16-lm32# ");
 		cmd_pos = 0;
 		cmd_len = 0;
 		state = SH_INPUT;
