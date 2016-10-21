@@ -14,8 +14,12 @@ void mi2c_delay();
 
 // I2C Switch methods
 
-#define I2C_SWITCH_ADDR 0x70
-#define I2C_SWITCH_DFL_CFG 0x28
+#define I2C_SWITCH_N 3
+#define I2C_SWITCH0_GEN 0
+#define I2C_SWITCH1_SFP0_7 1
+#define I2C_SWITCH2_SFP8_15 2
+
+extern uint8_t i2c_sw_addrs[I2C_SWITCH_N];
 
 int read_i2c_switch(uint8_t i2cif,uint8_t sw_addr);
 int write_i2c_switch(uint8_t i2cif,uint8_t sw_addr, uint8_t value);

@@ -10,6 +10,9 @@
 #include "inttypes.h"
 #include "sys.h"
 #include "syscon.h"
+#include "i2c.h"
+
+uint8_t i2c_sw_addrs[I2C_SWITCH_N] = {0x74,0x70,0x71};
 
 #define I2C_DELAY 300
 
