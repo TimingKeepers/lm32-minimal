@@ -29,14 +29,21 @@ int sfp_read_part_id(char *part_id, int port)
 {
 	int i;
 	uint8_t data = 0, sum = 0;
-	unsigned char sw_conf, sw_conf_dfl;
+	unsigned char sw_conf, sw_conf_dfl[I2C_SWITCH_N];
 
 	if(port==0) {
 
-	sw_conf_dfl = (unsigned char) read_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15]);
+	sw_conf_dfl[I2C_SWITCH2_SFP8_15] = \
+		(unsigned char) read_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15]);
+	sw_conf_dfl[I2C_SWITCH1_SFP0_7] = \
+		(unsigned char) read_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH1_SFP0_7]);
+	sw_conf_dfl[I2C_SWITCH0_GEN] = \
+		(unsigned char) read_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH0_GEN]);
 	//sw_conf = sw_conf_dfl | 0x40;
 	sw_conf = 0x40;
 	configure_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15],sw_conf);
+	configure_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH1_SFP0_7],0);
+	configure_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH0_GEN],0);
 	
 	mi2c_init(SFP0_I2C);
 
@@ -64,16 +71,25 @@ int sfp_read_part_id(char *part_id, int port)
 	mi2c_stop(SFP0_I2C);
 		
 	//sw_conf &= ~0x40;
-	sw_conf = sw_conf_dfl;
+	sw_conf = sw_conf_dfl[I2C_SWITCH2_SFP8_15];
 	configure_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15],sw_conf);
+	configure_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH1_SFP0_7],sw_conf_dfl[I2C_SWITCH1_SFP0_7]);
+	configure_i2c_switch(SFP0_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15],sw_conf_dfl[I2C_SWITCH0_GEN]);
 
 
 	} else if (port == 1){
 		
-		sw_conf_dfl = (unsigned char) read_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15]);
+		sw_conf_dfl[I2C_SWITCH2_SFP8_15] = \
+			(unsigned char) read_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15]);
+		sw_conf_dfl[I2C_SWITCH1_SFP0_7] = \
+			(unsigned char) read_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH1_SFP0_7]);
+		sw_conf_dfl[I2C_SWITCH0_GEN] = \
+			(unsigned char) read_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH0_GEN]);
 		//sw_conf = sw_conf_dfl | 0x80;
 		sw_conf = 0x80;
 		configure_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15],sw_conf);
+		configure_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH1_SFP0_7],0);
+		configure_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH0_GEN],0);
 
 		mi2c_init(SFP1_I2C);
 
@@ -99,8 +115,10 @@ int sfp_read_part_id(char *part_id, int port)
 		mi2c_stop(SFP1_I2C);
 	
 		//sw_conf &= ~0x80;
-		sw_conf = sw_conf_dfl;
+		sw_conf = sw_conf_dfl[I2C_SWITCH2_SFP8_15];
 		configure_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15],sw_conf);
+		configure_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH1_SFP0_7],sw_conf_dfl[I2C_SWITCH1_SFP0_7]);
+		configure_i2c_switch(SFP1_I2C,i2c_sw_addrs[I2C_SWITCH2_SFP8_15],sw_conf_dfl[I2C_SWITCH0_GEN]);
 	
 	}
 
